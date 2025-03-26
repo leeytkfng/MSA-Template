@@ -4,6 +4,12 @@ import {useState} from "react";
 const test1 = () =>{
     const [messages,setMessages] = useState('');
 
+
+    const moveToRegister = () =>{
+        window.location.href = "http://localhost:8081/register-form";
+    };
+
+
     const handleClick = async () => {
         try {
             const res = await fetch('/api/users');
@@ -18,6 +24,7 @@ const test1 = () =>{
         <div>
             <button onClick={handleClick} >유저 테스트</button>
             <p>{messages}</p>
+            <button onClick={moveToRegister}>테스트용</button>
         </div>
     );
 };
