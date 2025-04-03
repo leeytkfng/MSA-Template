@@ -1,124 +1,138 @@
-#  MSA-Template Project
+# MSA + Redis 기반 인증 시스템
 
-##  프로젝트 개요
-Spring 기반의 MSA(Microservice Architecture) 환경을 구축하고,
-React 클라이언트, Gateway, Eureka, 유저 서비스(User-Service)를 포함한
-**마이크로서비스 템플릿 프로젝트**입니다.
-
-> Gateway를 통해 모든 요청을 받아 마이크로서비스로 분산시키고,
-> React 기반 SPA 및 Thymeleaf 기반 SSR 페이지까지 구성했습니다.
-
----
-
-##  프로젝트 구조
+## 📌 프로젝트 구조 (Domain-Driven MSA)
 
 ```
-msa-template/
-├── gateway/          # Spring Cloud Gateway - API 경로 진입점
-├── client/           # 유저 서비스 (회원가입 등 기능)
-│   ├── domain/       # 도메인 모델 및 인터페이스
-│   ├── application/  # 비즈니스 로직
-│   ├── infrastructure/ # JPA 등 구현체
-│   └── api/          # REST/SSR 컨트롤러
-├── frontend/         # React 클라이언트 (메인 페이지)
-└── eureka-server/    # Eureka 서비스 디스커버리 (선택적으로 분리 가능)
+msa-auth-project/
+├── client (user-service)
+├── another-service (JWT 통화 가능한 기본 서비스)
+├── gateway (Spring Cloud Gateway)
+└── redis (Docker 컨테이너 or 원기 연결)
 ```
 
 ---
 
-## ⚙ 사용 기술 스택
+## 🚀 모험
 
-| 계층 | 기술 |
-|------|------|
-| Gateway | Spring Cloud Gateway |
-| Service Discovery | Eureka Netflix |
-| Backend (User Service) | Spring Boot, Spring Data JPA, DDD 구조 |
-| Frontend | React + Vite + TypeScript |
-| SSR | Thymeleaf |
-| DB | PostgreSQL |
-| 향후 인증 공유 | Redis or JWT 예정 |
+- JWT 가능 및 Redis에 사용자 정보 저장
+- 다른 서비스들이 해당 JWT 통화로 사용자 정보 검사 가능
 
 ---
 
-##  구현 기능 요약
+## ✅ 전체 목표
 
-- [x] Gateway + Eureka + React 연동 완료
-- [x] 클라이언트 서비스 Eureka 등록 및 라우팅 성공
-- [x] SSR 페이지 (Thymeleaf) → Gateway 경유로 접근
-- [x] React → Gateway → 유저 서비스 호출 흐름 구현
-- [x] 회원가입 폼 제출 및 DB 저장 처리
-- [x] 도메인 주도 설계 구조 기반 설계
+### 1. 로그인 (client-service)
+- 이메일 + 비밀번호 검사 후 JWT 발급
+- 도츠르에 JWT (key) / 사용자 정보 (value, JSON) 저장
 
----
-
-##  아키텍처 흐름도
-
->  `docs/architecture.png` (또는 draw.io 도식화 이미지 삽입)
-
-```text
-[React] → [Gateway (9090)] → [Eureka] → [User-Service (8081)]
-                               → [Other-Service (...)]
+```json
+{
+  "email": "aaa123@gmail.com",
+  "role": "USER",
+  "id": 42
+}
 ```
 
 ---
 
-## ▶️ 실행 방법
+### 2. Redis 저장 구조
 
-### 📌 1. Eureka 서버 실행
+#### 키
+- JWT 통화 문자열
+
+#### 번개 (value: JSON 문자열)
+```json
+{
+  "email": "사용자 이메일",
+  "role": "USER or ADMIN",
+  "id": 사용자 ID
+}
+```
+
+#### TTL 값
+- JWT 만료 시 포함된 만료 시간 (30분 등)
+
+---
+
+### 3. Redis 저장 로직 (UserService)
+
+```java
+RedisUserInfo redisUserInfo = new RedisUserInfo(user.getEmail(), user.getRole(), user.getId());
+String redisValue = objectMapper.writeValueAsString(redisUserInfo);
+
+redisTemplate.opsForValue().set(
+    token,
+    redisValue,
+    jwtTokenProvider.getExpiration(),
+    TimeUnit.MILLISECONDS
+);
+```
+
+---
+
+### 4. 다른 서비스에서 검사 (another-service)
+
+```java
+@GetMapping("/api/check/me")
+public ResponseEntity<?> checkUser(@RequestHeader("Authorization") String authHeader) {
+    if (!authHeader.startsWith("Bearer ")) return ResponseEntity.badRequest().body("토큰 누락");
+
+    String token = authHeader.replace("Bearer ", "");
+    String json = redisTemplate.opsForValue().get(token);
+
+    if (json == null) return ResponseEntity.status(401).body("토큰 만료되어있지 않음");
+
+    RedisUserInfo userInfo = new ObjectMapper().readValue(json, RedisUserInfo.class);
+    return ResponseEntity.ok(userInfo);
+}
+```
+
+---
+
+## 📂 Redis 예시
+
 ```bash
-cd eureka-server
-./gradlew bootRun
-```
+127.0.0.1:6379> keys *
+1) "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJh..."
 
-###  2. Gateway 실행
-```bash
-cd gateway
-./gradlew bootRun
+127.0.0.1:6379> get eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJh...
+"{\"email\":\"aaa123@gmail.com\",\"role\":\"USER\",\"id\":42}"
 ```
-
-###  3. 유저 서비스 실행
-```bash
-cd client
-./gradlew bootRun
-```
-
-###  4. React 앱 실행
-```bash
-cd frontend
-yarn dev
-```
-
-### ✅ 접속 주소
-- React SPA: http://localhost:5173
-- SSR 회원가입 폼: http://localhost:9090/register-form
-- Eureka 대시보드: http://localhost:8761
 
 ---
 
-##  향후 확장 예정 사항
+## 편의 확장 가능성
 
-- [ ] 로그인 처리 + JWT 발급
-- [ ] Redis 세션 공유 적용
-- [ ] Kafka or MQ 기반 이벤트 처리
-- [ ] 인증 서비스 (auth-service) 분리
-- [ ] CI/CD 파이프라인 적용
-
----
-
-##  느낀 점 / 회고
-
-- 단순한 CRUD를 넘어서, 실제 서비스 인프라를 구성하는 설계 경험을 함
-- Gateway/Eureka 기반 MSA 구조를 직접 구현해봄으로써 확장성의 중요성 체감
-- DDD 설계를 통해 유연한 구조 설계 및 테스트 용이성을 확보함
-
-> "작은 규모의 템플릿이지만, 실제로 팀 단위 프로젝트나 실무 구조 설계에 기반이 되는 뼈대를 직접 구현한 소중한 경험"
+| 기능 | 설명 |
+|--------|------|
+| 회원가입/로그인 | JWT 발급 + Redis 저장 |
+| 로그아웃 | Redis에서 del(token) |
+| ADMIN 권한 | role: "ADMIN" 검사로 관리 |
+| 링크와이드 | Refresh Token 포함된 구조 변환 가능 |
+| MSA 가용성 | 사용자 정보가 모든 서비스에서 통화되면 관리가 종종해진다 |
 
 ---
 
-##  개발자
+## 🚜 사용 기술
 
-- GitHub: [leeytkfng](https://github.com/leeytkfng)
+- Spring Boot 3
+- Spring Security 6
+- JWT (jjwt)
+- Redis (Spring Data Redis)
+- Spring Cloud Gateway
+- Docker
+
 ---
 
->  본 템플릿은 추후 다양한 프로젝트의 기반 구조로 활용될 수 있도록 유지 보수 예정입니다.
+## 후가 안전 / 확장 가능 정책
+
+- Refresh Token + Access Token 변환
+- 로그아웃 시 Redis Blacklist 가능
+- 서비스 간 사용자 정보 공유 시 role 기반 인가 가능
+- 프로필/박스 등급에서 userId 기반 관리
+
+---
+
+이 구조는 실용 MSA 토큰 인증/인가 패턴을 보조한 구조이며,
+아래에서 업그레이드하게 가능한 점과 다른 서비스들과의 통화성을 높이기 위해 설계되었습니다.
 

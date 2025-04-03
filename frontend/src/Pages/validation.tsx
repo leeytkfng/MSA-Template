@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import apiClient from "../apiClient.tsx";
 
 interface DecodedToken {
     sub: string;
@@ -32,6 +33,13 @@ const validation = () =>{
         alert("로그아웃되었습니다.");
         navigate("/");
     }
+    const checkLogin = async () => {
+        const res = await apiClient.get("/api/check/me", {
+            email,
+        });
+        console.log("유저 이메일: " ,res.data);
+    }
+
     const goToLogin = () => navigate("/login");
     const goToRegister = () => navigate("/register");
 
@@ -43,6 +51,9 @@ const validation = () =>{
                     <p><strong>이메일:</strong> {email}</p>
                     <button className="btn btn-danger w-100 mb-2" onClick={handleLogout}>
                         로그아웃
+                    </button>
+                    <button className="btn btn-danger w-100 mb-2" onClick={checkLogin}>
+                        로그인 확인 (Redis)
                     </button>
                 </>
 

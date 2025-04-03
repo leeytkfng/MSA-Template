@@ -17,6 +17,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    private Long id;
 
     private String email;
 
@@ -71,6 +72,14 @@ public class User {
                 ,null
                 ,LocalDateTime.now()
         );
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

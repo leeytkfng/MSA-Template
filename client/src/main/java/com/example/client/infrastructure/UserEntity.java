@@ -55,7 +55,12 @@ public class UserEntity {
 
     // domain <- entity
     public User toDomain(){
-        return new User(email,password,name,role != null ? role.name() : null,address,createdAt);
+        User user = new User(email, password, name,
+                role != null ? role.name() : null,
+                address,
+                createdAt);
+        user.setId(this.id);
+        return user;
     }
 
     //기본 생성자

@@ -1,7 +1,10 @@
 package com.example.client.application;
 
+import com.example.client.api.dto.RedisUserInfo;
 import com.example.client.domain.User;
 import com.example.client.domain.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,10 +47,24 @@ public class UserService {
 
         String token = jwtTokenProvider.createToken(user.getEmail());
 
-        long expirationMillis = jwtTokenProvider.getExpiration(); //만료시간가져오기
+        RedisUserInfo redisUserInfo = new RedisUserInfo(
+                user.getEmail(),
+                user.getRole(),
+                user.getId()
+        );
 
-        redisTemplate.opsForValue().set(token,email,expirationMillis, TimeUnit.MICROSECONDS);
+        try {
+            String redisvalue = objectMapper.writeValueAsString(redisUserInfo); //json직렬화과정
 
+            redisTemplate.opsForValue().set(
+                    token,
+                    redisvalue,
+                    jwtTokenProvider.getExpiration(),
+                    TimeUnit.MILLISECONDS
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return token;
     }
 }

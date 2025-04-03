@@ -25,4 +25,5 @@ public class JpaUserRepository implements UserRepository {
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email).map(UserEntity::toDomain);
     }
+
 }
