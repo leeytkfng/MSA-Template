@@ -48,7 +48,7 @@ const validation = () =>{
 
     }
     const checkLogin = async () => {
-        const res = await apiClient.get("/api/check/me", {
+        const res = await apiClient.get("/api/performances/me", {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
