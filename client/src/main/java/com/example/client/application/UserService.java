@@ -2,23 +2,50 @@ package com.example.client.application;
 
 import com.example.client.domain.User;
 import com.example.client.domain.UserRepository;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final StringRedisTemplate redisTemplate;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, StringRedisTemplate redisTemplate) {
         this.userRepository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.redisTemplate = redisTemplate;
     }
 
-    public void register(String email , String password, String nickname){
+    public void register(String email , String password, String name){
         userRepository.findByEmail(email).ifPresent(user-> {
             throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
         });
 
-        User user = new User(email,password,nickname);
+        User user = User.createUser(email,password,name ,passwordEncoder); //팩토리 정적 메서드로 저장
         userRepository.save(user);
+    }
+
+    public String login(String email, String password){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재치 앖는 사용자입니다."));
+
+        if(!passwordEncoder.matches(password , user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String token = jwtTokenProvider.createToken(user.getEmail());
+
+        long expirationMillis = jwtTokenProvider.getExpiration(); //만료시간가져오기
+
+        redisTemplate.opsForValue().set(token,email,expirationMillis, TimeUnit.MICROSECONDS);
+
+        return token;
     }
 }

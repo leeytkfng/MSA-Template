@@ -118,8 +118,6 @@ yarn dev
 ##  개발자
 
 - GitHub: [leeytkfng](https://github.com/leeytkfng)
-- Blog: (선택사항)
-
 ---
 
 >  본 템플릿은 추후 다양한 프로젝트의 기반 구조로 활용될 수 있도록 유지 보수 예정입니다.

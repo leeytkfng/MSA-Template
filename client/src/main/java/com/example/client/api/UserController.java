@@ -1,5 +1,6 @@
 package com.example.client.api;
 
+import com.example.client.api.dto.LoginRequest;
 import com.example.client.api.dto.RegisterRequest;
 import com.example.client.application.UserService;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,14 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@ModelAttribute RegisterRequest request){
-        userService.register(request.getEmail(), request.getPassword(), request.getNickname());
+        userService.register(request.getEmail(), request.getPassword(), request.getName());
         return ResponseEntity.ok("회원가입 성공");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> Login(@RequestBody LoginRequest request){
+        String token = userService.login(request.getEmail(),request.getPassword());
+        return ResponseEntity.ok(token);
     }
 
 }
