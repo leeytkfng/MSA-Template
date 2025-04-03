@@ -12,6 +12,7 @@ interface DecodedToken {
 
 const validation = () =>{
     const [email, setEmail] = useState<String | null>(null);
+    const [email2, setEmail2] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,16 +28,32 @@ const validation = () =>{
         }
     }, []);
 
-    const handleLogout = ()  =>{
-        localStorage.removeItem("token");
-        setEmail(null);
-        alert("로그아웃되었습니다.");
-        navigate("/");
+    const handleLogout = async ()  =>{
+        try {
+           const token = localStorage.getItem("token");
+           if (token) {
+               await apiClient.post("/api/users/logout" ,null, {
+                   headers: {
+                       Authorization: `Bearer ${token}`
+                   }
+               });
+           }
+            localStorage.removeItem("token");
+            setEmail(null);
+            alert("로그아웃되었습니다.");
+            navigate("/");
+        } catch (err) {
+            console.log("로그아웃중 오류:", err);
+        }
+
     }
     const checkLogin = async () => {
         const res = await apiClient.get("/api/check/me", {
-            email,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
         });
+        setEmail2(res.data.email);
         console.log("유저 이메일: " ,res.data);
     }
 
@@ -48,7 +65,8 @@ const validation = () =>{
             <h3>로그인 상태 확인</h3>
             {email ? (
                 <>
-                    <p><strong>이메일:</strong> {email}</p>
+                    <p><strong>디코딩된 이메일:</strong> {email}</p>
+                    {email2 && <p><strong>Redis 확인 이메일:</strong> {email2}</p>}
                     <button className="btn btn-danger w-100 mb-2" onClick={handleLogout}>
                         로그아웃
                     </button>
