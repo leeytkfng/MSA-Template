@@ -54,7 +54,7 @@ const validation = () =>{
             }
         });
         setEmail2(res.data.email);
-        console.log("유저 이메일: " ,res.data);
+        console.log("유저 정보: " ,res.data);
     }
 
     const goToLogin = () => navigate("/login");
