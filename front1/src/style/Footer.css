@@ -1,0 +1,42 @@
+/* 푸터 스타일 */
+/* Footer 스타일 */
+.footer {
+    background-color: #333;  /* 어두운 배경색 */
+    color: white;  /* 텍스트 색상 */
+    text-align: center;  /* 텍스트 가운데 정렬 */
+    padding: 20px 0;  /* 위아래 여백 */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .footer p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .footer .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer .footer-content p {
+    margin-bottom: 10px;
+  }
+  
+  .footer .social-media-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .footer .social-media-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .footer .social-media-links a:hover {
+    color: #6a2c9f;
+  }
+  

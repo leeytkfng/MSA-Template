@@ -63,6 +63,11 @@ public class UserEntity {
         return user;
     }
 
+    public void updateFromDomain(User user) {
+        this.name = user.getName();
+        this.address = user.getAddress();
+    }
+
     //기본 생성자
     protected UserEntity() {}
 }

@@ -26,4 +26,24 @@ public class JpaUserRepository implements UserRepository {
         return repository.findByEmail(email).map(UserEntity::toDomain);
     }
 
+
+    @Override
+    public void deleteByEmail(String email) {
+        repository.deleteByEmail(email);
+    }
+
+    @Override
+    public User update(User user) {
+        Optional<UserEntity> existingEntityOpt = repository.findByEmail(user.getEmail());
+        if (existingEntityOpt.isPresent()) {
+            UserEntity existingEntity = existingEntityOpt.get();
+            existingEntity.updateFromDomain(user);
+
+            UserEntity updatedEntity = repository.save(existingEntity);
+            return updatedEntity.toDomain();
+        } else {
+            throw new IllegalArgumentException("이메일 " + user.getEmail() + "에 해당하는 사용자가 존재하지 않습니다.");
+        }
+    }
+
 }

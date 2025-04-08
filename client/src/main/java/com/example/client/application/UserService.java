@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
@@ -66,5 +67,41 @@ public class UserService {
             throw new RuntimeException(e);
         }
         return token;
+    }
+
+
+    @Transactional
+    public void updateUser(String token, String email, String newName, String newAddress) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        user.setName(newName);
+        user.setAddress(newAddress);
+
+        userRepository.update(user);
+
+        RedisUserInfo redisUserInfo = new RedisUserInfo(
+                user.getEmail(),
+                user.getRole(),
+                user.getId()
+        );
+
+        try {
+            String redisvalue = objectMapper.writeValueAsString(redisUserInfo);
+            redisTemplate.opsForValue().set(
+                    token,
+                    redisvalue,
+                    jwtTokenProvider.getExpiration(),
+                    TimeUnit.MILLISECONDS
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getUserInfo(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        return user;
     }
 }

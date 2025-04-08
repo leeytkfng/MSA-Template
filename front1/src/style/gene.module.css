@@ -1,0 +1,96 @@
+.container {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.tabWrapper {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tabButton {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #e2e8f0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tabButton.active {
+    background-color: #9c25eb;
+    color: white;
+}
+.rankList {
+    display: flex;
+    justify-content: space-between; /* 각 아이템 간 간격 자동 조절 */
+    list-style: none;
+    padding: 0;
+    border: none;
+    margin: 0 auto;
+    max-width: 100%; /* 부모 안에서 꽉 차게 */
+    overflow-x: auto; /* 혹시 너무 좁을 때 가로 스크롤 가능하게 */
+}
+
+.rankItem {
+    width: 18%; /* 5개 × 18% + 간격 여유 */
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+
+.rankIndex {
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin-right: 0.5rem;
+}
+
+.rankScore {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.rankImage {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.rankContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rankTitle {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0.3rem 0;
+}
+
+.rankPlace,
+.rankDate {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0.1rem 0;
+}
+

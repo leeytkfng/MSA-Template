@@ -1,0 +1,49 @@
+.banner-wrapper {
+  width: 100vw;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-item {
+  height: 400px;
+}
+
+.banner-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ✅ 썸네일 네비를 슬라이드 내부에 배치 */
+.thumbnail-nav {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  border: 1px solid white;
+}
+
+.thumbnail:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  border: 2px solid #fff;
+}
