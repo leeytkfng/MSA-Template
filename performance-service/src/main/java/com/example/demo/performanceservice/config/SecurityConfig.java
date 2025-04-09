@@ -24,10 +24,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ✅ 여기에 API 패턴 허용
                         .requestMatchers(mvc.pattern("/api/performances/**")).permitAll()
-                        .requestMatchers(mvc.pattern("/h2-console/**")).permitAll() // H2 콘솔 허용
                         .anyRequest().authenticated()
-                )
-                .headers(headers -> headers.frameOptions().disable()); // H2 콘솔이 iframe이라 이거도 꺼야 함
+                );
 
         return http.build();
     }

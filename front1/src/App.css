@@ -1,121 +1,32 @@
-/* 전체 페이지 스타일 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
-/* 헤더 스타일 */
 header {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 상단 헤더 (로고 + 메뉴) */
-header .top-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-header .logo {
-    display: flex;
-    align-items: center;
-}
-
-header .logo img {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
-
-header .logo span {
-    font-weight: bold;
-    font-size: 24px;
-    color: #6b46c1; /* 보라색 */
-}
-
-header .menu-items {
-    display: flex;
-    gap: 30px;
-}
-
-header .menu-items a {
-    text-decoration: none;
-    color: #6b46c1;
-    font-weight: 600;
-    transition: color 0.3s;
-}
-
-header .menu-items a:hover {
-    color: #4c288d;
-}
-
-/* 하단 헤더 (프로모션 + 검색창) */
-header .bottom-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #f1f1f1; /* 하단 헤더 배경 */
-}
-
-header .promotion {
-    font-size: 18px;
-    color: #6b46c1; /* 보라색 */
-    font-weight: bold;
-}
-
-header .search-container {
-    display: flex;
-    align-items: center;
-    width: 500px; /* 검색창 넓이 */
-}
-
-header .search-container input {
-    padding: 10px;
+    position: fixed;
+    top: 0;
     width: 100%;
-    border-radius: 8px;
-    border: 2px solid #6b46c1;
-    color: #4a4a4a;
+    height: 150px; /* 원하는 높이로 */
+    background-color: white;
+    z-index: 1000;
+    border-bottom: 1px solid #ddd;
 }
 
-header .search-container button {
-    background-color: #6b46c1;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin-left: 10px;
-    cursor: pointer;
+.content {
+    flex: 1;
+    margin-top: 150px; /* Header 높이만큼 여백 줘야 아래 내용 안 가려짐 */
+    overflow-y: auto;
 }
 
-header .search-container button:hover {
-    background-color: #4c288d;
+footer {
+    height: 50px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f1f1f1;
 }
 
-/* 반응형 스타일 */
-@media (max-width: 768px) {
-    header .top-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    header .menu-items {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    header .bottom-header {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-top: 10px;
-    }
-
-    header .search-container {
-        width: 100%;
-    }
+.button1 {
+    background: rgb(128, 128, 128);
 }

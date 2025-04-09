@@ -5,10 +5,13 @@ import com.example.client.api.dto.RegisterRequest;
 import com.example.client.api.dto.UpdateRequest;
 import com.example.client.application.JwtTokenProvider;
 import com.example.client.application.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "User API" , description = "사용자 관련 api")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -30,6 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation
     public ResponseEntity<String> Login(@RequestBody LoginRequest request){
         String token = userService.login(request.getEmail(),request.getPassword());
         return ResponseEntity.ok(token);

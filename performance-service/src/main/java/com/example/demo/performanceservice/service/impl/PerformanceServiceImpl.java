@@ -52,7 +52,6 @@ public class PerformanceServiceImpl implements PerformanceService {
         return true;
     }
     @Override
-    @Scheduled(cron = "0 */1 * * * *")
     @Transactional
     public void cleanPerformance() {
         LocalDateTime thresholdTime = LocalDateTime.now().plusMonths(2);

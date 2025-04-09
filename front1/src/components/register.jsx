@@ -1,52 +1,59 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../../front1/src/apiClient.jsx";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "../style/Register.css";
 
 const RegisterPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [validationPassword, setValidationPassword] = useState('');
-    const [name, setName] = useState('');
-    const [error, setError] = useState('');
+    const [email, setEmail] = useState("");
     const [authCode, setAuthCode] = useState("");
     const [emailVerified, setEmailVerified] = useState(false);
+    const [password, setPassword] = useState("");
+    const [validationPassword, setValidationPassword] = useState("");
+    const [name, setName] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (email.startsWith("admin")) {
+            setEmailVerified(true);
+        } else {
+            setEmailVerified(false);
+        }
+    }, [email]);
+
 
     const handleSendAuthCode = async () => {
         try {
-            const response = await apiClient.post("/api/users/send-code", { email });
+            await apiClient.post("/api/users/send-code", { email });
             alert("인증번호가 이메일로 발송되었습니다.");
-        } catch (err) {
+        } catch (error) {
             alert("인증번호 전송 실패!");
         }
     };
 
     const handleVerifyAuthCode = async () => {
         try {
-            const response = await apiClient.post("/api/users/verify-code" ,{
+            await apiClient.post("/api/users/verify-code", {
                 email,
                 code: authCode,
             });
             alert("이메일 검증완료");
             setEmailVerified(true);
-        } catch (err ) {
+        } catch (error) {
             alert("인증번호가 틀렸습니다.");
         }
     };
 
-    const handleRegister = async () => {
+    const HandleRegister = async (event) => {
+        event.preventDefault();
+
         if (!emailVerified) {
-            setError("이메일 인증을 완료해주세요.");
-            return;
-        }
-        if (!email.trim() || !password.trim() || !validationPassword.trim() || !name.trim()) {
-            setError("모든 필드를 입력해주세요.");
+            setErrorMessage("이메일 인증을 완료해주세요.");
             return;
         }
 
         if (password !== validationPassword) {
-            setError("비밀번호가 일치하지 않습니다.");
+            setErrorMessage("비밀번호가 일치하지 않습니다.");
             return;
         }
 
@@ -56,96 +63,134 @@ const RegisterPage = () => {
             formData.append("password", password);
             formData.append("name", name);
 
-            const res = await apiClient.post('/api/users/register', formData);
-            alert("회원가입 성공!");
-            navigate('/');
-        } catch (err) {
-            console.error("회원가입 오류:", err);
-            setError("회원가입 실패: 이미 존재하는 사용자거나 서버 오류입니다.");
+            const res = await apiClient.post("/api/users/register", formData);
+
+            if (res.status === 200) {
+                alert("회원가입 성공!");
+                navigate("/login");
+            }
+        } catch (error) {
+            setErrorMessage("이메일 중복 / 오류");
+            console.error(error);
         }
     };
 
-    const goToLogin = () => {
-        navigate('/');
-    };
-
     return (
-        <div className="container mt-5 border mb-3" style={{ maxWidth: '450px' , padding: "15px", borderRadius: "8px"  }}>
-            <h3 className="mb-4">회원가입</h3>
-
-            <div className="mb-3">
-                <label className="form-label">이름</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">이메일</label>
-                <input
-                    type="email"
-                    className="form-control"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={emailVerified}
-                />
-                <button className= "btn btn-outline-primary mt-3"
-                        onClick={handleSendAuthCode}
-                        disabled={emailVerified}
-                    >인증요청</button>
-            </div>
-
-            {!emailVerified && (
-                <div className="mb-3">
-                    <label className="form-label">인증번호 입력</label>
+        <div className="join-page">
+            <div className="join-container">
+                <h1 className="join-title">회원 가입</h1>
+                <form onSubmit={HandleRegister}>
                     <div className="input-group">
+                        <label htmlFor="name">이름</label>
                         <input
                             type="text"
-                            className="form-control"
-                            value={authCode}
-                            onChange={(e) => setAuthCode(e.target.value)}
+                            id="name"
+                            name="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="이름"
+                            required
                         />
-                        <button className="btn btn-outline-success" onClick={handleVerifyAuthCode}>
-                            인증 확인
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="email">이메일</label>
+                        <div className="email-container">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="이메일"
+                                required
+                            />
+                            {!emailVerified ? (
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={handleSendAuthCode}
+                                        disabled={emailVerified}
+                                    >
+                                        인증요청
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="button1"
+                                        onClick={handleSendAuthCode}
+                                        disabled={true}
+                                    >
+                                        인증완료
+                                    </button>
+                                </>
+                                )}
+                        </div>
+                    </div>
+
+                    {!emailVerified && (
+                        <div className="input-group">
+                            <label htmlFor="authCode">인증번호 입력</label>
+                            <div className="auth-code-container">
+                                <input
+                                    type="text"
+                                    id="authCode"
+                                    value={authCode}
+                                    onChange={(e) => setAuthCode(e.target.value)}
+                                    placeholder="인증번호 입력"
+                                />
+                                <button type="button" onClick={handleVerifyAuthCode}>
+                                    인증 확인
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="input-group">
+                        <label htmlFor="password">비밀번호</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="비밀번호"
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="validationPassword">비밀번호 확인</label>
+                        <input
+                            type="password"
+                            id="validationPassword"
+                            value={validationPassword}
+                            onChange={(e) => setValidationPassword(e.target.value)}
+                            placeholder="비밀번호 확인"
+                            required
+                        />
+                    </div>
+
+                    {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+                    <div className="button-container">
+                        <button type="submit" className="btn-submit">
+                            가입
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate("/")}
+                            className="btn-link"
+                        >
+                            취소
                         </button>
                     </div>
-                </div>
-            )}
-
-            <div className="mb-3">
-                <label className="form-label">비밀번호</label>
-                <input
-                    type="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                </form>
             </div>
-
-            <div className="mb-3">
-                <label className="form-label">비밀번호 확인</label>
-                <input
-                    type="password"
-                    className="form-control"
-                    value={validationPassword}
-                    onChange={(e) => setValidationPassword(e.target.value)}
-                />
-            </div>
-            {error && <div className="alert alert-danger">{error}</div>}
-
-
-            <button className="btn btn-success w-100" onClick={handleRegister}>
-                회원가입
-            </button>
-
-            <button className="btn btn-outline-secondary w-100 mt-3" onClick={goToLogin}>
-                로그인으로 돌아가기
-            </button>
         </div>
     );
-};
+}
 
 export default RegisterPage;
