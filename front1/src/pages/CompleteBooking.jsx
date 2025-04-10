@@ -14,6 +14,7 @@ function ConfirmFinalPage() {
             try {
                 const response = await axios.get(`http://localhost:9090/api/reservation/confirm?key=${key}`);
                 setData(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("❌ 예매 정보 불러오기 실패:", error);
             }
@@ -23,7 +24,10 @@ function ConfirmFinalPage() {
 
     const handleConfirm = async () => {
         try {
-            await apiClient.post("/api/reservation/save", { key });
+            const params = new URLSearchParams();
+            params.append("key",key)
+
+            await apiClient.post("/api/reservation/save",params);
             alert("✅ 예매가 확정되었습니다.");
             navigate(`/complete/${key}`);
         } catch (error) {

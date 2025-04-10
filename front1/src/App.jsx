@@ -10,6 +10,10 @@ import PerformanceDetail from "./pages/PerformanceDetail.jsx";
 import SelectSeat from "./pages/SelectSeat.jsx";
 import ConfirmBooking from "./pages/ConfirmBooking.jsx";
 import CompleteBooking from "./pages/CompleteBooking.jsx";
+import Home from "./pages/Home.jsx";
+import Loading from "./pages/Loading.jsx";
+import LoadingPage from "./pages/LoadingPage.jsx";
+import ConfirmFinalPage from "./pages/CompleteBooking.jsx";
 
 function App() {
     const location = useLocation();
@@ -30,9 +34,11 @@ function App() {
                         <Route path="/" element={<Main1 />} />
                         <Route path="/mypage" element={<MyPage/>} />
                         <Route path="/performances/:pId" element={<PerformanceDetail/>} />
-                        <Route path="/select:key" element={<SelectSeat/>} />
-                        <Route path="/confirm:key" element={<ConfirmBooking/>} />
-                        <Route path="/complete:key" element={<CompleteBooking/>} />
+                        <Route path="/select/:key" element={<SelectSeat/>} />
+                        <Route path="/confirm/:key" element={<ConfirmBooking/>} />
+                        <Route path="/complete/:key" element={<ConfirmFinalPage/>} />
+                        <Route path="/home" element={<Home/>} />
+                        <Route path="/loading" element={<LoadingPage/>} />
                         {/* 기타 일반 페이지들 */}
                     </Routes>
                     <Footer />

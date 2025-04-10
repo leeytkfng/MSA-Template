@@ -61,7 +61,7 @@ function PerformanceDetail() {
             });
             const {key} = response.data;
             console.log("확인용:" + key);
-            window.open(`/select/${response.data.key}`, "_blank" ,"width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
+            window.open("/loading", "_blank" ,"width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
             );
         } catch (err) {
             console.log("예메 요청실패" + err);

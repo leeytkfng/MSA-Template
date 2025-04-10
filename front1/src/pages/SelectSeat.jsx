@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import apiClient from "../apiClient.jsx";
+import "../style/SelectSeat.css"
 
 function SelectSeat() {
     const { key } = useParams();
@@ -69,7 +70,7 @@ function SelectSeat() {
             params.append("key", key);
             selectedSeats.forEach(seat => params.append("rSpots", seat));
 
-            await apiClient.post("/api/reservation/confirm", params);
+            await axios.post("http://localhost:9090/api/reservation/confirm", params);
             navigate(`/confirm/${key}`);
         } catch (error) {
             console.error("❌ 예매 확정 중 오류:", error);

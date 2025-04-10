@@ -20,6 +20,7 @@ public class TestPublisher {
 
     @PostMapping("/send")
     public ResponseEntity<String> send(@RequestBody ReservationMessage message){
+        System.out.println("dd:"+message);
         rabbitTemplate.convertAndSend("reservation.complete.queue", message);
         return ResponseEntity.ok("메세지 전송완료");
     }

@@ -131,9 +131,11 @@ public class ReservationController {
         return ResponseEntity.ok(nonAvailableRSpots);
     }
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<?> saveReservation(@RequestParam String key) {
+        System.out.println(key);
         ReservationRequest request = timedStorage.get(key);
+        System.out.println(request);
         reservationService.createFinalReservations(request); // Redis에서 꺼내서 DB 저장
         return ResponseEntity.ok().build();
     }
