@@ -27,19 +27,21 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "사용자 회원가입" , description = "규격에 따라서 회원가입")
     public ResponseEntity<String> register(@ModelAttribute RegisterRequest request){
         userService.register(request.getEmail(), request.getPassword(), request.getName());
         return ResponseEntity.ok("회원가입 성공");
     }
 
     @PostMapping("/login")
-    @Operation
+    @Operation(summary = "사용자 로그인" ,description = "이메일,비밀번호로 로그인")
     public ResponseEntity<String> Login(@RequestBody LoginRequest request){
         String token = userService.login(request.getEmail(),request.getPassword());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "사용자 로그아웃" ,description = "Redis,Jwt 토큰삭제")
     public ResponseEntity<?> logout(@RequestHeader("Authorization")String authHeader) {
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body("토큰없음");
@@ -51,6 +53,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
+    @Operation(summary = "사용자 정보수정" ,description = "주소기입 or 기존정보 수정")
     public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeader, @RequestBody UpdateRequest request) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body("토큰없음");
@@ -63,6 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
+    @Operation(summary = "사용자 상세정보" ,description = "마이페이지 관련")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization")String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body("토큰없음");

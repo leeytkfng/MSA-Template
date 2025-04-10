@@ -7,6 +7,7 @@ import apiClient from "../apiClient.jsx";
 function PerformanceDetail() {
     const { pId } = useParams(); // ✅ URL에서 pId 가져오기
     const [performance, setPerformance] = useState({});
+    const token =localStorage.getItem("token");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,6 +49,26 @@ function PerformanceDetail() {
         return "시간 정보 없음";
     };
 
+    const handleReservation = async () => {
+        try {
+            // 백엔드에서 예메 key를 먼저 생성(에시 API)
+            const response = await apiClient.post("/api/reservation/select", {
+                pId:performance.pid,
+            }, {
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            });
+            const {key} = response.data;
+            console.log("확인용:" + key);
+            window.open(`/select/${response.data.key}`, "_blank" ,"width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
+            );
+        } catch (err) {
+            console.log("예메 요청실패" + err);
+            alert("예메 요청중 오류발생.");
+        }
+    };
+
 
     return (
         <div className="container mx-auto p-10">
@@ -78,7 +99,8 @@ function PerformanceDetail() {
 
                     {/* 🔥 예매 버튼 */}
                     <div className="mt-10 text-right">
-                        <button className="w-full px-12 py-4 bg-purple-600 text-white text-xl font-bold rounded-lg shadow-lg hover:bg-purple-700 transition">
+                        <button className="w-full px-12 py-4 bg-purple-600 text-white text-xl font-bold rounded-lg shadow-lg hover:bg-purple-700 transition"
+                        onClick={handleReservation}>
                             🎟️ 예매하기
                         </button>
                     </div>

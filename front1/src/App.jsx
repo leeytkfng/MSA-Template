@@ -7,6 +7,9 @@ import Main1 from "./pages/main1.jsx";
 import Footer from "./pages/Footer.jsx";
 import MyPage from "./pages/MyPage.jsx";
 import PerformanceDetail from "./pages/PerformanceDetail.jsx";
+import SelectSeat from "./pages/SelectSeat.jsx";
+import ConfirmBooking from "./pages/ConfirmBooking.jsx";
+import CompleteBooking from "./pages/CompleteBooking.jsx";
 
 function App() {
     const location = useLocation();
@@ -27,6 +30,9 @@ function App() {
                         <Route path="/" element={<Main1 />} />
                         <Route path="/mypage" element={<MyPage/>} />
                         <Route path="/performances/:pId" element={<PerformanceDetail/>} />
+                        <Route path="/select:key" element={<SelectSeat/>} />
+                        <Route path="/confirm:key" element={<ConfirmBooking/>} />
+                        <Route path="/complete:key" element={<CompleteBooking/>} />
                         {/* 기타 일반 페이지들 */}
                     </Routes>
                     <Footer />
