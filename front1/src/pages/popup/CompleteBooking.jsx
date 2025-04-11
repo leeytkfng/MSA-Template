@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import apiClient from "../apiClient.jsx";
+import apiClient from "../../apiClient.jsx";
 
 function ConfirmFinalPage() {
     const { key } = useParams(); // Redis 또는 부모로부터 전달받은 key

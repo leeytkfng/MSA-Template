@@ -1,0 +1,119 @@
+/* 전체 컨테이너 */
+.reservation-wrapper {
+    display: flex;
+    width: 920px;
+    height: 600px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  /* 좌측 영역 */
+  .reservation-left {
+    flex: 6;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .reservation-left h2 {
+    margin-bottom: 10px;
+  }
+  .info-row-wrapper{
+    padding-top: 50px;
+    margin: 90px;
+  }
+  /* 가로 정렬 row */
+  .info-row.horizontal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .row-lable{
+    font-size: 100px;
+    font-weight: 10;
+    color: #333;
+  }
+  
+  /* 라벨과 출력 텍스트/input 간 정렬 */
+  .info-row.horizontal label {
+    width: 80px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .info-row.horizontal input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 출력용 예매자 이름 */
+  .viewer-name {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  /* 우측 영역 */
+  .reservation-right {
+    flex: 4;
+    padding: 30px;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 221px;
+  }
+  
+  .reservation-right h2 {
+    margin-bottom: 20px;
+  }
+  
+  .info-list-wrapper {
+    background-color: #D9D9D9;
+    padding: 10px 25px 10px 25px;
+    width: 180px;
+    border-radius: 2px;
+    margin-bottom: 30px;
+  }
+  
+  .info-list {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 20px;
+    max-height: 100px;
+  }
+  
+  .info-list li {
+    margin-bottom: 6px;
+  }
+  
+  .price-details {
+    margin-left: 10px;
+    color: gray;
+    font-weight: normal;
+    font-size: 13px;
+  }
+  
+  .confirm-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    background-color: #7850d7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #5d3ea7;
+  }
+  

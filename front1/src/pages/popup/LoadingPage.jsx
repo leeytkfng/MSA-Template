@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import apiClient from "../apiClient.jsx";
+import apiClient from "../../apiClient.jsx";
 
 function LoadingPage() {
     const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ function LoadingPage() {
                 console.log("✅ 받은 key:", key);
 
                 setTimeout(() => {
-                    navigate(`/select/${key}`);
+                    navigate(`/popup/select/${key}`);
                 }, 2000);
             } catch (err) {
                 console.error("❌ 예약 요청 실패:", err);

@@ -72,9 +72,9 @@ function PerformanceDetail() {
         sessionStorage.setItem("reservationData", JSON.stringify(reservationData));
 
         window.open(
-            "/loading",
-            "_blank",
-            "width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
+            "/popup/loading",
+            "popupWindow",
+            "width=920,height=600,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
         );
     };
 
@@ -110,7 +110,7 @@ function PerformanceDetail() {
                     {/* 🔥 예매 버튼 */}
                     <div className="mt-10 text-right">
                         <button className="w-full px-12 py-4 bg-purple-600 text-white text-xl font-bold rounded-lg shadow-lg hover:bg-purple-700 transition"
-                        onClick={handleReservation}>
+                                onClick={handleReservation}>
                             🎟️ 예매하기
                         </button>
                     </div>
@@ -119,7 +119,7 @@ function PerformanceDetail() {
 
             {/* 공연 상세 정보 */}
             <div className="mt-12 bg-gray-100 rounded-lg "
-            style={{padding:"10px"}}>
+                 style={{padding:"10px"}}>
                 <h2 className="text-3xl font-bold text-gray-800">🎭 공연 상세 정보</h2>
                 <div className="mt-4 text-gray-700 text-lg leading-8 space-y-4">
                     <p>🔹 **예매 가능 시간:**

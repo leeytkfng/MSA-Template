@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import apiClient from "../apiClient.jsx";
+import apiClient from "../../apiClient.jsx";
 
 function ConfirmPage() {
     const { key } = useParams(); // URL 파라미터로부터 key 받기
@@ -40,7 +40,7 @@ function ConfirmPage() {
             // 백엔드로 예약 완료 확인 요청
             await apiClient.post("/api/reservation/complete", params);
 
-            navigate(`/complete/${key}`);
+            navigate(`/popup/complete/${key}`);
         } catch (error) {
             console.error("❌ 예매 완료 중 오류:", error);
             alert("예매 완료 중 오류가 발생했습니다.");
