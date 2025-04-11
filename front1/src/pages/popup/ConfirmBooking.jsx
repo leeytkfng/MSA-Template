@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import apiClient from "../../apiClient.jsx";
-
+import "./confirm.css"
 function ConfirmPage() {
     const { key } = useParams(); // URL 파라미터로부터 key 받기
     const navigate = useNavigate();
@@ -54,20 +54,64 @@ function ConfirmPage() {
     const { reservationDTO, rSpots } = data;
 
     return (
-        <div>
-            <h2>예매 확인</h2>
-            <ul>
-                <li><strong>공연 제목:</strong> {reservationDTO.pTitle}</li>
-                <li><strong>장소:</strong> {reservationDTO.pPlace}</li>
-                <li><strong>날짜:</strong> {reservationDTO.pDate}</li>
-                <li><strong>가격:</strong> {reservationDTO.pPrice}</li>
-                <li><strong>선택한 좌석:</strong> {rSpots.join(", ")}</li>
-                <li><strong>예매자:</strong> {reservationDTO.uName}</li>
-                <li><strong>전화번호:</strong> <input type="text" value={rPhone} onChange={(e) => setRPhone(e.target.value)} /></li>
-                <li><strong>이메일:</strong> <input type="text" value={rEmail} onChange={(e) => setREmail(e.target.value)} /></li>
-            </ul>
-            <button className="complete-btn" onClick={handleComplete}>작성 완료</button>
+        <div className="reservation-wrapper">
+            {/* 왼쪽 영역 - 사용자 정보 */}
+            <div className="reservation-left">
+                <div className="info-row-wrapper">
+                    <h2>예매자 정보 입력</h2>
+
+                    {/* 예매자 이름 (출력용) */}
+                    <div className="info-row horizontal">
+                        <label className="row-lable">예매자</label>
+                        <span className="viewer-name">{reservationDTO.uName}</span>
+                    </div>
+
+                    {/* 전화번호 입력 */}
+                    <div className="info-row horizontal">
+                        <label className="row-lable">전화번호</label>
+                        <input
+                            type="text"
+                            value={rPhone}
+                            onChange={(e) => setRPhone(e.target.value)}
+                        />
+                    </div>
+
+                    {/* 이메일 입력 */}
+                    <div className="info-row horizontal">
+                        <label className="row-lable">이메일</label>
+                        <input
+                            type="text"
+                            value={rEmail}
+                            onChange={(e) => setREmail(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* 오른쪽 영역 - 공연 정보 + 버튼 */}
+            <div className="reservation-right">
+                <h2>예매 정보 확인</h2>
+                <div className="info-list-wrapper">
+                    <ul className="info-list">
+                        <li><strong>공연 제목:</strong> {reservationDTO.pTitle}</li>
+                        <li><strong>장소:</strong> {reservationDTO.pPlace}</li>
+                        <li><strong>날짜:</strong> {reservationDTO.pDate}</li>
+                        <li>
+                            <strong>가격:</strong> {Number(reservationDTO.pPrice) * rSpots.length}원
+                            <span className="price-details">
+                  ({reservationDTO.pPrice}원 × {rSpots.length})
+                </span>
+                        </li>
+                        <li><strong>선택한 좌석:</strong> {rSpots.join(", ")}</li>
+                    </ul>
+                </div>
+                <button className="confirm-btn" onClick={handleComplete}>예매 완료</button>
+            </div>
         </div>
+
+
+
+
     );
 }
 

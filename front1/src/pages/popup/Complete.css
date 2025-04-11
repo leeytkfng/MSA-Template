@@ -1,0 +1,98 @@
+/* 전체 컨테이너 */
+.complete-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 920px;
+  height: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 제목 */
+.complete-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* 공연/유저 정보 구역 */
+.complete-section {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fdfdfd;
+}
+
+/* 왼쪽/오른쪽 정렬 블럭 */
+.section-left,
+.section-right {
+  width: 45%;
+}
+
+/* 항목 라벨 */
+.complete-info-item {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* 항목 제목 */
+.info-title {
+  display: inline-block;
+  width: 90px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* 항목 내용 */
+.info-value {
+  color: #444;
+}
+
+/* 버튼 그룹 */
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.button-group button {
+  padding: 12px 32px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* 확정 버튼 */
+.complete-btn {
+  background-color: #222;
+  color: #fff;
+}
+
+.complete-btn:hover {
+  background-color: #000;
+}
+
+/* 취소 버튼 */
+.cancel-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #aaa;
+}

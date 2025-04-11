@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import apiClient from "../../apiClient.jsx";
+import "./Complete.css"
 
 function ConfirmFinalPage() {
     const { key } = useParams(); // Redis 또는 부모로부터 전달받은 key
@@ -53,21 +54,27 @@ function ConfirmFinalPage() {
     const { reservationDTO, rSpots } = data;
 
     return (
-        <div>
-            <h2>예매 최종 확인</h2>
-            <ul>
-                <li><strong>공연 제목:</strong> {reservationDTO.pTitle}</li>
-                <li><strong>장소:</strong> {reservationDTO.pPlace}</li>
-                <li><strong>날짜:</strong> {reservationDTO.pDate}</li>
-                <li><strong>가격:</strong> {reservationDTO.pPrice}</li>
-                <li><strong>선택한 좌석:</strong> {rSpots.join(", ")}</li>
-                <li><strong>예매자:</strong> {reservationDTO.uName}</li>
-                <li><strong>전화번호:</strong> {reservationDTO.rPhone}</li>
-                <li><strong>이메일:</strong> {reservationDTO.rEmail}</li>
-            </ul>
+        <div className="complete-wrapper">
+            <h2 className="complete-title">예매 최종 확인</h2>
+            <div className="complete-section">
+                <div className="complete-left">
+                    <p className="complete-info-item"><span className="info-title">공연 제목:</span> <span className="info-value">{reservationDTO.pTitle}</span></p>
+                    <p className="complete-info-item"><span className="info-title">장소:</span> <span className="info-value">{reservationDTO.pPlace}</span></p>
+                    <p className="complete-info-item"><span className="info-title">날짜:</span> <span className="info-value">{reservationDTO.pDate}</span></p>
+                    <p className="complete-info-item"><span className="info-title">가격:</span> <span className="info-value">{reservationDTO.pPrice}</span></p>
+                </div>
+                <div className="section-right">
+                    <p className="complete-info-item"><span className="info-title">좌석:</span> <span className="info-value">{rSpots.join(", ")}</span></p>
+                    <p className="complete-info-item"><span className="info-title">예매자:</span> <span className="info-value">{reservationDTO.uName}</span></p>
+                    <p className="complete-info-item"><span className="info-title">전화번호:</span> <span className="info-value">{reservationDTO.rPhone}</span></p>
+                    <p className="complete-info-item"><span className="info-title">이메일:</span> <span className="info-value">{reservationDTO.rEmail}</span></p>
+                </div>
+            </div>
 
-            <button className="confirm-btn" onClick={handleConfirm}>✅ 예매 확정</button>
-            <button className="cancel-btn" onClick={handleCancel}>❌ 예매 취소</button>
+            <div className="button-group">
+                <button className="complete-btn" onClick={handleConfirm}>✅ 예매 확정</button>
+                <button className="cancel-btn" onClick={handleCancel}>❌ 예매 취소</button>
+            </div>
         </div>
     );
 }
