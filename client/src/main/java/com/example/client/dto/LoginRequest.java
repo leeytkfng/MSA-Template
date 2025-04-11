@@ -1,4 +1,4 @@
-package com.example.client.api.dto;
+package com.example.client.dto;
 
 public class LoginRequest {
     public String getEmail() {

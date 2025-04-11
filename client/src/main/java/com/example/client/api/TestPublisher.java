@@ -1,6 +1,6 @@
 package com.example.client.api;
 
-import com.example.client.api.dto.ReservationMessage;
+import com.example.client.message.dto.ReservationMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

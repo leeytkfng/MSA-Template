@@ -1,6 +1,6 @@
 package com.example.client.application;
 
-import com.example.client.api.dto.RedisUserInfo;
+import com.example.client.dto.RedisUserInfo;
 import com.example.client.domain.User;
 import com.example.client.domain.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;

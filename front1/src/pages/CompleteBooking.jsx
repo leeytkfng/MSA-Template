@@ -12,7 +12,8 @@ function ConfirmFinalPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:9090/api/reservation/confirm?key=${key}`);
+                const response
+                    = await axios.get(`http://localhost:9090/api/reservation/confirm?key=${key}`);
                 setData(response.data);
                 console.log(response.data);
             } catch (error) {

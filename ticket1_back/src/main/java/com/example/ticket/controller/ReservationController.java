@@ -1,6 +1,7 @@
 package com.example.ticket.controller;
 
 import com.example.ticket.dto.ReservationDTO;
+import com.example.ticket.dto.ReservationMessage;
 import com.example.ticket.dto.ReservationRequest;
 import com.example.ticket.dto.Ticket;
 import com.example.ticket.service.ReservationService;
@@ -18,6 +19,7 @@ import java.util.*;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final com.example.ticket.message.ReservationEventPublisher reservationEventPublisher;
 
     // 서버 메모리에 임시 저장할 Map
     private final TimedStorage timedStorage;
@@ -135,9 +137,25 @@ public class ReservationController {
     public ResponseEntity<?> saveReservation(@RequestParam String key) {
         System.out.println(key);
         ReservationRequest request = timedStorage.get(key);
-        System.out.println(request);
-        reservationService.createFinalReservations(request); // Redis에서 꺼내서 DB 저장
+        // DB 저장
+        List<ReservationDTO> savedReservations = reservationService.createFinalReservations(request);
+
+        // 메시지 전송
+        ReservationDTO dto = request.getReservationDTO();
+        ReservationMessage message = ReservationMessage.builder()
+                .uId(dto.getUId())
+                .pId(dto.getPId())
+                .pTitle(dto.getPTitle())
+                .pPlace(dto.getPPlace())
+                .pDate(dto.getPDate().toString())
+                .pPrice(Integer.parseInt(dto.getPPrice()))
+                .rSpots(request.getRSpots() != null ? request.getRSpots() : new ArrayList<>()) // ✅ null 방지
+                .build();
+
+        reservationEventPublisher.sendReservationMessage(message);
+
         return ResponseEntity.ok().build();
     }
+
 
 }

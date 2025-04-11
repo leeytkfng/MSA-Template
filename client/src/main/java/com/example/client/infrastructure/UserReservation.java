@@ -1,6 +1,5 @@
 package com.example.client.infrastructure;
 
-import com.example.client.api.dto.ReservationMessage;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -98,4 +97,5 @@ public class UserReservation {
     private String place;
     private String seats;
     private Integer price;
+
 }

@@ -1,8 +1,8 @@
 package com.example.client.api;
 
-import com.example.client.api.dto.LoginRequest;
-import com.example.client.api.dto.RegisterRequest;
-import com.example.client.api.dto.UpdateRequest;
+import com.example.client.dto.LoginRequest;
+import com.example.client.dto.RegisterRequest;
+import com.example.client.dto.UpdateRequest;
 import com.example.client.application.JwtTokenProvider;
 import com.example.client.application.UserService;
 import io.swagger.v3.oas.annotations.Operation;

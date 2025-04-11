@@ -1,138 +1,109 @@
-# MSA + Redis 기반 인증 시스템
+# 🎭 공연 예매 시스템 - API 명세서
 
-## 📌 프로젝트 구조 (Domain-Driven MSA)
+## 📌 개요
+이 시스템은 **마이크로서비스 아키텍처(MSA)** 기반으로 설계된 공연 예매 플랫폼입니다. 각 서비스는 독립적으로 관리되며 REST API와 메시지 큐(RabbitMQ)를 통해 상호작용합니다. 주요 서비스는 다음과 같습니다:
 
+- **user-service (8080)**: 사용자 관리 및 인증
+- **performance-service (8765)**: 공연 정보 등록, 수정, 조회
+- **ticket-service (8787)**: 예매 처리, 좌석 예약, 티켓 발급
+
+## 🧩 마이크로서비스 구성
+
+| 서비스 이름           | 포트  | 설명                            | Swagger 문서 경로       |
+|------------------------|-------|-----------------------------------|---------------------------|
+| user-service           | 8080  | 회원가입, 로그인, 사용자 정보 관리 | `/swagger-ui/index.html` |
+| performance-service    | 8765  | 공연 등록, 조회, 수정             | `/swagger-ui/index.html` |
+| ticket-service         | 8787  | 예매 요청, 좌석 선택, 티켓 생성   | `/swagger-ui/index.html` |
+
+
+## 🔁 메시지 미들웨어 (RabbitMQ)
+
+- **Exchange**: `reservation.direct`
+- **Queue**: `reservation.user.queue`
+- **Routing Key**: `reservation.user`
+
+### 메시지 흐름 예시
 ```
-msa-auth-project/
-├── client (user-service)
-├── another-service (JWT 통화 가능한 기본 서비스)
-├── gateway (Spring Cloud Gateway)
-└── redis (Docker 컨테이너 or 원기 연결)
+ticket-service → ReservationMessage 발행 → user-service로 소비
 ```
 
----
-
-## 🚀 모험
-
-- JWT 가능 및 Redis에 사용자 정보 저장
-- 다른 서비스들이 해당 JWT 통화로 사용자 정보 검사 가능
-
----
-
-## ✅ 전체 목표
-
-### 1. 로그인 (client-service)
-- 이메일 + 비밀번호 검사 후 JWT 발급
-- 도츠르에 JWT (key) / 사용자 정보 (value, JSON) 저장
-
+### 메시지 포맷
 ```json
 {
-  "email": "aaa123@gmail.com",
-  "role": "USER",
-  "id": 42
+  "uId": 1,
+  "rId": 100,
+  "pId": 5,
+  "rSpot": "A5",
+  "pTitle": "백조의 호수",
+  "rEmail": "example@email.com",
+  "rPhone": "010-1234-5678",
+  "rTime": "2025-04-12T18:00:00"
 }
 ```
 
----
+## 🔐 인증 방식
 
-### 2. Redis 저장 구조
+- **JWT 기반 인증**
+- 로그인 성공 시, HTTP-Only 쿠키 또는 LocalStorage에 토큰 저장
+- 모든 API 요청은 `Authorization: Bearer <token>` 형식으로 인증
 
-#### 키
-- JWT 통화 문자열
+## ✅ Swagger 확인 방법
 
-#### 번개 (value: JSON 문자열)
-```json
-{
-  "email": "사용자 이메일",
-  "role": "USER or ADMIN",
-  "id": 사용자 ID
-}
+각 서비스에서 다음 경로 접속
+```
+http://localhost:<포트>/swagger-ui/index.html
 ```
 
-#### TTL 값
-- JWT 만료 시 포함된 만료 시간 (30분 등)
+예:
+- 사용자: http://localhost:8080/swagger-ui/index.html
+- 공연: http://localhost:8765/swagger-ui/index.html
+- 예매: http://localhost:8787/swagger-ui/index.html
+
+
+## 📁 API 기능 요약
+
+### 🎟️ ticket-service
+- POST `/api/reservation/select`: 좌석 임시 저장 및 key 발급
+- GET `/api/reservation/select?key=`: 임시 저장된 정보 조회
+- POST `/api/reservation/confirm`: 좌석 선택 확정
+- POST `/api/reservation/complete`: 유저 정보 추가
+- POST `/api/reservation/ticket`: 예매 확정 및 티켓 발급
+
+### 👤 user-service
+- POST `/api/users/register`: 회원가입
+- POST `/api/users/login`: 로그인 (JWT 발급)
+- GET `/api/users/info`: 사용자 정보 조회
+- PUT `/api/users/update`: 사용자 정보 수정
+- DELETE `/api/users/delete`: 회원 탈퇴
+- (MQ) `@RabbitListener`로 예약 정보 수신
+
+### 🎭 performance-service
+- GET `/api/performances`: 공연 목록
+- GET `/api/performances/{id}`: 공연 상세 조회
+- POST `/api/performances`: 공연 등록
+- PUT `/api/performances/{id}`: 공연 수정
+- DELETE `/api/performances/{id}`: 공연 삭제
+
+
+## ⚙️ 역할 분담 예시
+
+| 이름   | 담당 서비스         | 주요 역할                             |
+|--------|----------------------|----------------------------------------|
+| 홍길동 | user-service         | 회원가입, JWT 인증, MQ 수신 처리      |
+| 김민지 | ticket-service       | 예매 flow 전체, MQ 발행 로직 구현     |
+| 박준호 | performance-service  | 공연 CRUD, 좌석 상태 반영             |
+
+
+## 📌 비고
+- 데이터베이스는 PostgreSQL 사용
+- `ticket-service`는 Redis 기반의 임시 저장소를 활용함 (TimedStorage)
+- 모든 서비스는 Spring Boot 기반이며, RabbitMQ 연결을 위한 의존성 포함
+
+## 💡 향후 확장 고려
+- Kafka로 메시징 시스템 확장
+- 알림 서비스 분리 및 WebSocket 적용
+- 결제 시스템 추가 및 외부 PG사 연동
 
 ---
-
-### 3. Redis 저장 로직 (UserService)
-
-```java
-RedisUserInfo redisUserInfo = new RedisUserInfo(user.getEmail(), user.getRole(), user.getId());
-String redisValue = objectMapper.writeValueAsString(redisUserInfo);
-
-redisTemplate.opsForValue().set(
-    token,
-    redisValue,
-    jwtTokenProvider.getExpiration(),
-    TimeUnit.MILLISECONDS
-);
-```
-
----
-
-### 4. 다른 서비스에서 검사 (another-service)
-
-```java
-@GetMapping("/api/check/me")
-public ResponseEntity<?> checkUser(@RequestHeader("Authorization") String authHeader) {
-    if (!authHeader.startsWith("Bearer ")) return ResponseEntity.badRequest().body("토큰 누락");
-
-    String token = authHeader.replace("Bearer ", "");
-    String json = redisTemplate.opsForValue().get(token);
-
-    if (json == null) return ResponseEntity.status(401).body("토큰 만료되어있지 않음");
-
-    RedisUserInfo userInfo = new ObjectMapper().readValue(json, RedisUserInfo.class);
-    return ResponseEntity.ok(userInfo);
-}
-```
-
----
-
-## 📂 Redis 예시
-
-```bash
-127.0.0.1:6379> keys *
-1) "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJh..."
-
-127.0.0.1:6379> get eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJh...
-"{\"email\":\"aaa123@gmail.com\",\"role\":\"USER\",\"id\":42}"
-```
-
----
-
-## 편의 확장 가능성
-
-| 기능 | 설명 |
-|--------|------|
-| 회원가입/로그인 | JWT 발급 + Redis 저장 |
-| 로그아웃 | Redis에서 del(token) |
-| ADMIN 권한 | role: "ADMIN" 검사로 관리 |
-| 링크와이드 | Refresh Token 포함된 구조 변환 가능 |
-| MSA 가용성 | 사용자 정보가 모든 서비스에서 통화되면 관리가 종종해진다 |
-
----
-
-## 🚜 사용 기술
-
-- Spring Boot 3
-- Spring Security 6
-- JWT (jjwt)
-- Redis (Spring Data Redis)
-- Spring Cloud Gateway
-- Docker
-
----
-
-## 후가 안전 / 확장 가능 정책
-
-- Refresh Token + Access Token 변환
-- 로그아웃 시 Redis Blacklist 가능
-- 서비스 간 사용자 정보 공유 시 role 기반 인가 가능
-- 프로필/박스 등급에서 userId 기반 관리
-
----
-
-이 구조는 실용 MSA 토큰 인증/인가 패턴을 보조한 구조이며,
-아래에서 업그레이드하게 가능한 점과 다른 서비스들과의 통화성을 높이기 위해 설계되었습니다.
+마지막 업데이트: 2025-04-11
 
