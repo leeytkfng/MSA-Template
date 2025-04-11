@@ -29,7 +29,7 @@ function ConfirmFinalPage() {
 
             await apiClient.post("/api/reservation/save",params);
             alert("✅ 예매가 확정되었습니다.");
-            navigate(`/complete/${key}`);
+            navigate("/");
         } catch (error) {
             console.error("❌ 예매 확정 실패:", error);
             alert("예매 확정 중 문제가 발생했습니다.");

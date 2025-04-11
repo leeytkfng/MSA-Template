@@ -27,7 +27,10 @@ function SelectSeat() {
                 setNonAvailable(nonAvailableRes.data);
 
                 const total = requestRes.data.reservationDTO.pAllSpot || 20;
-                const rows = ["A", "B", "C", "D", "E"];
+                const seatPerRow = 10;
+                const rowCount = Math.ceil(total/seatPerRow);
+                const rows = Array.from({length: rowCount}, (_,i) =>
+                String.fromCharCode("A".charCodeAt(0)+i))
                 const generated = [];
 
                 for (let i = 0; i < total; i++) {

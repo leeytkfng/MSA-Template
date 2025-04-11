@@ -14,10 +14,13 @@ import Home from "./pages/Home.jsx";
 import Loading from "./pages/Loading.jsx";
 import LoadingPage from "./pages/LoadingPage.jsx";
 import ConfirmFinalPage from "./pages/CompleteBooking.jsx";
+import {useState} from "react";
 
 function App() {
     const location = useLocation();
     const hideLayout = ["/login", "/register"].includes(location.pathname);
+
+    const [showLoading,setShowLoading] = useState(false);
 
     return (
         <div className="app-container">
@@ -34,7 +37,7 @@ function App() {
                         <Route path="/" element={<Main1 />} />
                         <Route path="/mypage" element={<MyPage/>} />
                         <Route path="/performances/:pId" element={<PerformanceDetail/>} />
-                        <Route path="/select/:key" element={<SelectSeat/>} />
+                        <Route path="/select/:key" element={<SelectSeat setShowLoading={setShowLoading}/>} />
                         <Route path="/confirm/:key" element={<ConfirmBooking/>} />
                         <Route path="/complete/:key" element={<ConfirmFinalPage/>} />
                         <Route path="/home" element={<Home/>} />

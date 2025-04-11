@@ -14,19 +14,14 @@ function LoadingPage() {
             setError(null);
 
             try {
-                const response = await apiClient.post("/api/reservation/select", {
-                    uId: 2,
-                    pId: 99,
-                    rId: 101,
-                    uName: "홍길동",
-                    pTitle: "오페라의 유령",
-                    pPlace: "예술의전당",
-                    pDate: "2025-04-12T05:31",
-                    pPrice: 120000,
-                    pAllSpot: 20
-                });
+                const raw = window.opener?.sessionStorage?.getItem("reservationData");
+                if(!raw) throw new Error("예약 정보가 없습니다.")
 
-                const key = response.data;
+                const reservationData = JSON.parse(raw);
+
+                const res = await apiClient.post("/api/reservation/select" ,reservationData);
+
+                const key = res.data;
                 console.log("✅ 받은 key:", key);
 
                 setTimeout(() => {

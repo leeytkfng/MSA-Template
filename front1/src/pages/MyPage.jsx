@@ -50,6 +50,8 @@ function MyPage() {
           },
         });
         setUserInfo(response.data);
+        console.log(response.data);
+        localStorage.setItem("userInfo", JSON.stringify(response.data));
         setNameInput(response.data.name);
         setAddressInput(response.data.address || "");
       } catch (error) {

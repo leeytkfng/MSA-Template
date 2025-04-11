@@ -49,25 +49,35 @@ function PerformanceDetail() {
         return "시간 정보 없음";
     };
 
-    const handleReservation = async () => {
-        try {
-            // 백엔드에서 예메 key를 먼저 생성(에시 API)
-            const response = await apiClient.post("/api/reservation/select", {
-                pId:performance.pid,
-            }, {
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
-            });
-            const {key} = response.data;
-            console.log("확인용:" + key);
-            window.open("/loading", "_blank" ,"width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
-            );
-        } catch (err) {
-            console.log("예메 요청실패" + err);
-            alert("예메 요청중 오류발생.");
+    const handleReservation = () => {
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+        if (userInfo) {
+            console.log("유저 ID:", userInfo.id);
+            console.log("이름:", userInfo.name);
         }
+
+
+        const reservationData = {
+            uId: userInfo.id,
+            uName: userInfo.name,
+            pId: performance.pid,
+            pTitle: performance.ptitle,
+            pPlace: performance.pplace,
+            pDate: performance.pdate,
+            pPrice: performance.pprice,
+            pAllSpot: performance.pallSpot
+        };
+
+        sessionStorage.setItem("reservationData", JSON.stringify(reservationData));
+
+        window.open(
+            "/loading",
+            "_blank",
+            "width=600,height=700,left=300,top=200,toolbar=no,menubar=no,scrollbars=no,resizable=no"
+        );
     };
+
 
 
     return (
