@@ -27,7 +27,7 @@ function PerformanceEdit() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:8765/api/performances", form, {
+            await axios.post("http://localhost:9090/api/performances", form, {
                 headers: { "Content-Type": "application/json" },
             });
             alert("공연이 등록되었습니다!");
@@ -46,7 +46,7 @@ function PerformanceEdit() {
         formData.append("fileName", file.name);
 
         try {
-            await axios.post("http://localhost:8765/api/performances/upload", formData, {
+            await axios.post("http://localhost:9090/api/performances/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             setForm((prev) => ({ ...prev, pImg: file.name }));

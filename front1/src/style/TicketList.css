@@ -1,0 +1,42 @@
+.ticket-list {
+    margin-top: 20px;
+    height: 40vh;
+    overflow-y: auto;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ticket-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 5px 20px;
+    height: auto;
+    overflow: hidden;
+}
+
+.ticket-card:hover {
+    background-color: #ddd;
+}
+
+.ticket-title{
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid purple;
+}
+
+.status {
+    text-align: right;
+    display: block;
+    flex-shrink: 0;
+}
+
+.status.booked {
+    color: green;
+}
+
+.status.not-booked {
+    color: red;
+    font-weight: bold;
+}

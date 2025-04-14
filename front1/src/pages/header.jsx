@@ -26,6 +26,7 @@ function Header() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
+        localStorage.removeItem("userInfo");
         alert("로그아웃 되었습니다");
         window.location.reload(); // 강제 리렌더링 (선택사항)
     };

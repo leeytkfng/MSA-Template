@@ -1,0 +1,58 @@
+services:
+  eureka:
+    image: lee123432/eureka-service:1.0.0
+    ports:
+      - "8761:8761"
+
+
+  gateway:
+    image: lee123432/gateway-service:1.0.0
+    ports:
+      - "9090:9090"
+
+  client:
+    image: lee123432/client-service:1.0.0
+    ports:
+      - "8081:8081"
+
+  performance:
+    image: lee123432/perfomance-service:1.0.0
+    ports:
+      - "8765:8765"
+
+  ticket:
+    image: lee123432/ticket-service:1.0.0
+    ports:
+      - "8787:8787"
+
+  redis1:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ./front1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front1:/app
+    working_dir: /app
+    command: yarn dev
+
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: lee1
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+
+
+

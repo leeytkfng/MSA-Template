@@ -7,6 +7,7 @@ import Main1 from "./pages/main1.jsx";
 import Footer from "./pages/Footer.jsx";
 import MyPage from "./pages/MyPage.jsx";
 import PerformanceDetail from "./pages/PerformanceDetail.jsx";
+import PerformanceEdit from "./pages/PerformanceEdit.jsx";
 import {useState} from "react";
 import PopupApp from "./pages/popup/PopupApp.jsx";
 
@@ -31,6 +32,7 @@ function App() {
                         <Route path="/" element={<Main1 />} />
                         <Route path="/mypage" element={<MyPage/>} />
                         <Route path="/performances/:pId" element={<PerformanceDetail/>} />
+                        <Route path="/performances/edit" element={<PerformanceEdit/>} />
                         <Route path="/popup/*" element={<PopupApp />} />
                         {/* 기타 일반 페이지들 */}
                     </Routes>
