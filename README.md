@@ -1,6 +1,10 @@
 # 🎭 공연 예매 시스템 - API 명세서
+<img width="1440" alt="스크린샷 2025-04-14 오후 12 12 59" src="https://github.com/user-attachments/assets/0e62bd42-22e9-4d1d-b579-7a17941c1d14" />
 
 ## 📌 개요
+
+![111 drawio](https://github.com/user-attachments/assets/7ee553af-5b51-46aa-9bae-740a888dbc8a)
+
 이 시스템은 **마이크로서비스 아키텍처(MSA)** 기반으로 설계된 공연 예매 플랫폼입니다. 각 서비스는 독립적으로 관리되며 REST API와 메시지 큐(RabbitMQ)를 통해 상호작용합니다. 주요 서비스는 다음과 같습니다:
 
 - **user-service (8080)**: 사용자 관리 및 인증
